@@ -1,5 +1,5 @@
 {
-  "name": "db",
+  "name": "@nirmaata/db",
   "module": "src/index.ts",
   "type": "module",
   "private": true,
@@ -8,5 +8,8 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "exports": {
+    "./client": "./src/index.ts"
   }
 }
