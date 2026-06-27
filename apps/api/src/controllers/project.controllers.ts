@@ -76,7 +76,7 @@ export const getAllProjects: RequestHandler<
       projects: projects.map((project) => ({
         id: project.id,
         title: project.title,
-        lastActivityAt: project.lastActivityAt.toString(),
+        lastActivityAt: project.lastActivityAt,
       })),
     });
   } catch (error) {
@@ -117,7 +117,7 @@ export const getProject: RequestHandler<
       project: {
         id: project.id,
         title: project.title,
-        lastActivityAt: project.lastActivityAt.toString(),
+        lastActivityAt: project.lastActivityAt,
       },
     });
   } catch (error) {

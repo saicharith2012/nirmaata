@@ -30,6 +30,7 @@ model User {
   username  String    @unique
   password  String
   projects  Project[]
+  messages  Message[]
   createdAt DateTime  @default(now())
   updated   DateTime  @updatedAt
 }
@@ -51,9 +52,11 @@ model Message {
   id        String      @id @default(cuid())
   projectId String
   project   Project     @relation(fields: [projectId], references: [id])
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
   type      messageType
   from      senderType
   contents  String
-  toolCall  toolType
+  toolCall  toolType?
   createdAt DateTime    @default(now())
 }
