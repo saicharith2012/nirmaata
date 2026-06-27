@@ -41,7 +41,8 @@ model Project {
   conversationHistory Message[]
   userId              String
   user                User      @relation(fields: [userId], references: [id])
-  snapShotKey         String
+  snapShotKey         String?
+  lastActivityAt      DateTime  @default(now())
   createdAt           DateTime  @default(now())
   updated             DateTime  @updatedAt
 }

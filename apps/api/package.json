@@ -3,7 +3,7 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun --hot run src/index.ts",
+    "dev": "bun run src/index.ts",
     "start": "bun run src/index.ts"
   },
   "private": true,
@@ -21,6 +21,7 @@
     "@nirmaata/validators": "workspace:*",
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "zod": "^4.4.3"
   }
 }
