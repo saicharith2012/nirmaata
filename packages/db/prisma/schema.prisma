@@ -10,6 +10,7 @@ datasource db {
 enum messageType {
   TOOL_CALL
   TEXT_MESSAGE
+  TOOL_RESULT
 }
 
 enum senderType {
@@ -34,17 +35,18 @@ model User {
 }
 
 model Project {
-  id                  String                @id @default(cuid())
+  id                  String    @id @default(cuid())
   title               String
   initialPrompt       String
-  ConversationHistory ConversationHistory[]
+  conversationHistory Message[]
   userId              String
-  user                User                  @relation(fields: [userId], references: [id])
-  createdAt           DateTime              @default(now())
-  updated             DateTime              @updatedAt
+  user                User      @relation(fields: [userId], references: [id])
+  snapShotKey         String
+  createdAt           DateTime  @default(now())
+  updated             DateTime  @updatedAt
 }
 
-model ConversationHistory {
+model Message {
   id        String      @id @default(cuid())
   projectId String
   project   Project     @relation(fields: [projectId], references: [id])
@@ -52,4 +54,5 @@ model ConversationHistory {
   from      senderType
   contents  String
   toolCall  toolType
+  createdAt DateTime    @default(now())
 }
