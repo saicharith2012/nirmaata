@@ -5,8 +5,9 @@ import { prisma } from "@nirmaata/db/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "../utils/env";
+import { ApiError } from "@nirmaata/common/customApiError";
 
-export const signupUser: RequestHandler = async (req, res) => {
+export const signupUser: RequestHandler = async (req, res, next) => {
   try {
     // validate data from request body
     // check if the user already exists (409 if exists)
@@ -31,10 +32,7 @@ export const signupUser: RequestHandler = async (req, res) => {
     });
 
     if (existingUser) {
-      res.status(409).json({
-        error: "User already exists.",
-      });
-      return;
+      throw new ApiError("User already exists.", 409);
     }
 
     const hashedPassword = await bcrypt.hash(password, 5);
@@ -47,10 +45,7 @@ export const signupUser: RequestHandler = async (req, res) => {
     });
 
     if (!newUser) {
-      res.status(500).json({
-        error: "Error while creating new user.",
-      });
-      return;
+      throw new ApiError("Error while creating user.", 500);
     }
 
     res.status(200).json({
@@ -58,16 +53,14 @@ export const signupUser: RequestHandler = async (req, res) => {
       userId: newUser.id,
     });
   } catch (err) {
-    console.log(
-      `Error while creating user. ${err instanceof Error ? err.message : ""}`,
-    );
-    res.status(500).json({
+    console.log(err);
+    res.status(err instanceof ApiError ? err.statusCode : 500).json({
       error: `Error while creating user. ${err instanceof Error ? err.message : ""}`,
     });
   }
 };
 
-export const signinUser: RequestHandler = async (req, res) => {
+export const signinUser: RequestHandler = async (req, res, next) => {
   // validate req body data
   // check if the user exists (404 if doesn't)
   // validate password
@@ -91,10 +84,7 @@ export const signinUser: RequestHandler = async (req, res) => {
     });
 
     if (!existingUser) {
-      res.status(400).json({
-        error: "User not found",
-      });
-      return;
+      throw new ApiError("User not found", 404);
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -103,10 +93,7 @@ export const signinUser: RequestHandler = async (req, res) => {
     );
 
     if (!isPasswordCorrect) {
-      res.status(401).json({
-        error: "Invalid credentials.",
-      });
-      return;
+      throw new ApiError("Invalid credentials", 401);
     }
 
     const token = jwt.sign(
@@ -121,10 +108,8 @@ export const signinUser: RequestHandler = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.log(
-      `Error while signing in user. ${err instanceof Error ? err.message : ""}`,
-    );
-    res.status(500).json({
+    console.log(err);
+    res.status(err instanceof ApiError ? err.statusCode : 500).json({
       error: `Error while signing in user. ${err instanceof Error ? err.message : ""}`,
     });
   }

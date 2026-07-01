@@ -10,6 +10,7 @@ import type {
 import { prisma } from "@nirmaata/db/client";
 import { postUserMessageSchema } from "@nirmaata/validators/validationSchema";
 import { sendValidationError } from "@nirmaata/validators/validation";
+import { ApiError } from "@nirmaata/common/customApiError";
 
 export const getConversation: RequestHandler<
   GetMessagesRouteParams,
@@ -30,11 +31,7 @@ export const getConversation: RequestHandler<
     });
 
     if (!messages) {
-      res.status(400).json({
-        ok: false,
-        error: "Error while getting messages.",
-      });
-      return;
+      throw new ApiError("Error while getting messages.", 400);
     }
 
     res.status(200).json({
@@ -50,7 +47,7 @@ export const getConversation: RequestHandler<
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(error instanceof ApiError ? error.statusCode : 500).json({
       ok: false,
       error: `Failed to fetch the conversation. ${error instanceof Error ? error.message : ""}`,
     });
@@ -84,11 +81,7 @@ export const postUserMessage: RequestHandler<
     });
 
     if (!message) {
-      res.status(400).json({
-        ok: false,
-        error: "Error while sending the prompt.",
-      });
-      return;
+      throw new ApiError("Error while sending the prompt.", 400);
     }
 
     res.status(200).json({
@@ -99,7 +92,7 @@ export const postUserMessage: RequestHandler<
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(error instanceof ApiError ? error.statusCode : 500).json({
       ok: false,
       error: `Failed to send the prompt. ${error instanceof Error ? error.message : ""}`,
     });

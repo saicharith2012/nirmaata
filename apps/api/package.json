@@ -19,6 +19,7 @@
   "dependencies": {
     "@nirmaata/db": "workspace:*",
     "@nirmaata/validators": "workspace:*",
+    "@nirmaata/common": "workspace:*",
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",

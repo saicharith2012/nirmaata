@@ -1,0 +1,16 @@
+{
+  "name": "@nirmaata/common",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./customApiError": "./src/utils/ApiError.ts"
+  },
+  "private": true,
+  "type": "module"
+}

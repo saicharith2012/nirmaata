@@ -14,6 +14,7 @@ import type {
   GetProjectResponse,
   GetProjectRouteParams,
 } from "../types/types";
+import { ApiError } from "@nirmaata/common/customApiError";
 
 export const createProject: RequestHandler<
   CreateProjectRequest,
@@ -48,7 +49,7 @@ export const createProject: RequestHandler<
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(error instanceof ApiError ? error.statusCode : 500).json({
       ok: false,
       error: `Failed to create the new project. ${error instanceof Error ? error.message : ""}`,
     });
@@ -81,7 +82,7 @@ export const getAllProjects: RequestHandler<
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(error instanceof ApiError ? error.statusCode : 500).json({
       ok: false,
       error: `Failed to fetch the projects. ${error instanceof Error ? error.message : ""}`,
     });
@@ -104,11 +105,7 @@ export const getProject: RequestHandler<
     });
 
     if (!project) {
-      res.status(404).json({
-        ok: false,
-        error: "Project not found.",
-      });
-      return;
+      throw new ApiError("Project not found.", 404);
     }
 
     res.status(200).json({
@@ -122,7 +119,7 @@ export const getProject: RequestHandler<
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(error instanceof ApiError ? error.statusCode : 500).json({
       ok: false,
       error: `Failed to fetch the project. ${error instanceof Error ? error.message : ""}`,
     });
@@ -151,7 +148,7 @@ export const deleteProject: RequestHandler<
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(error instanceof ApiError ? error.statusCode : 500).json({
       ok: false,
       error: `Failed to delete the project. ${error instanceof Error ? error.message : ""}`,
     });
